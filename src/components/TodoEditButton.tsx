@@ -1,45 +1,47 @@
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../redux/store";
 import { updateTask } from "../redux/slices/todoSlice";
+import { AppDispatch } from "../redux/store";
 
 interface TodoEditButtonProps {
-  todo: { id: string; task: string } | null;
+  currentTaskId: string;
+  taskToEditId: string;
+  updatedTaskValue: string;
   isEditing: boolean;
-  setEditingTask: React.Dispatch<React.SetStateAction<string>>;
-  setEditingTaskId: React.Dispatch<React.SetStateAction<string>>;
+  setIsEditing: (bool: boolean) => void;
+  handleEditButtonClick: (id: string, task: string) => void;
 }
 
 const TodoEditButton: React.FC<TodoEditButtonProps> = ({
-  todo,
+  currentTaskId,
+  taskToEditId,
+  updatedTaskValue,
   isEditing,
-  setEditingTask,
-  setEditingTaskId
+  setIsEditing,
+  handleEditButtonClick,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const editButtonHandler = () => {
-    setEditingTaskId(todo?.id)
-  };
-
-  const saveEditedTaskButtonHandler = () => {
-    
+  const saveButtonHandler = () => {
+    if (!updatedTaskValue.trim()) return;
+    dispatch(updateTask({ id: taskToEditId, task: updatedTaskValue.trim() }));
+    setIsEditing(false);
   };
 
   return (
     <>
-      {!isEditing ? (
+      {isEditing && currentTaskId === taskToEditId ? (
         <button
-          className="bg-blue-700 py-2 px-3 rounded-md text-gray-300 hover:cursor-pointer"
-          onClick={editButtonHandler}
+          className="bg-green-700 py-2 px-3 rounded-md text-gray-300 hover:cursor-pointer"
+          onClick={saveButtonHandler}
         >
-          Edit
+          Save
         </button>
       ) : (
         <button
-          className="bg-green-700 py-2 px-3 rounded-md text-gray-300 hover:cursor-pointer"
-          onClick={saveEditedTaskButtonHandler}
+          className="bg-blue-700 py-2 px-3 rounded-md text-gray-300 hover:cursor-pointer"
+          onClick={() => handleEditButtonClick(currentTaskId, updatedTaskValue)}
         >
-          Save
+          Edit
         </button>
       )}
     </>

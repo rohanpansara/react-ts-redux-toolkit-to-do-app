@@ -7,7 +7,7 @@ export interface ToDo {
 }
 
 // Initial state
-const initialState: ToDo[] = [{ id: "0", task: "First Task" }];
+const initialState: ToDo[] = [{ id: "0", task: "Sample Task Added From todoSlice" }];
 
 // Create the slice
 const todoSlice = createSlice({

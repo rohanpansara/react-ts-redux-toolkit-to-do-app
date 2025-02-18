@@ -7,10 +7,11 @@ import TodoEditButton from "./TodoEditButton";
 const TodoTable = () => {
   const todos = useSelector((state: RootState) => state.todoSlice);
 
-  const [editingTaskId, setEditingTaskId] = useState("");
-  const [newUpdatedTask, setNewUpdatedTask] = useState("");
+  const [taskToEditId, setTaskToEditId] = useState("");
+  const [taskToEditTask, setTaskToEditTask] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
-  if (todos.length === 0) {
+  if (todos?.length === 0) {
     return (
       <div className="w-full flex justify-center items-center rounded-md p-2 px-3">
         <span className="text-sm text-gray-400 italic">No Task Added Yet.</span>
@@ -18,32 +19,42 @@ const TodoTable = () => {
     );
   }
 
+  const handleEditButtonClick = (id: string, task: string) => {
+    setTaskToEditId(id);
+    setTaskToEditTask(task);
+    setIsEditing(true);
+  };
+
   return (
-    <div>
-      {todos.map((todo) => (
+    <div className="flex flex-col gap-1">
+      {todos?.map((todo) => (
         <div
           key={todo?.id}
           className="w-full flex justify-between items-center border-[1px] border-gray-500 rounded-md p-2 px-3"
         >
-          {editingTaskId && editingTaskId === todo.id ? (
+          {isEditing && taskToEditId === todo.id ? (
             <input
               type="text"
+              className="p-2 w-full text-gray-300 placeholder:text-gray-400 focus:outline-none"
               placeholder={`You are editing '${todo?.task}'`}
-              className="p-2 text-gray-300 placeholder:text-gray-400 focus:outline-none"
-              value={todo?.task}
-              onChange={(e) => {setNewUpdatedTask(e.target.value)}}
+              value={taskToEditTask}
+              onChange={(e) => setTaskToEditTask(e.target.value)}
             />
           ) : (
             <span className="text-sm text-gray-300">{todo?.task}</span>
           )}
           <div className="w-fit flex gap-2">
             <TodoEditButton
-              todo={{id: editingTaskId, task: newUpdatedTask}}
-              isEditing={editingTaskId === todo.id}
-              setEditingTask={setNewUpdatedTask}
-              setEditingTaskId={setNewUpdatedTask}
+              currentTaskId={todo.id}
+              taskToEditId={taskToEditId}
+              updatedTaskValue={taskToEditTask}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              handleEditButtonClick={() =>
+                handleEditButtonClick(todo.id, todo.task)
+              }
             />
-            <TodoDeleteButton id={todo.id} />
+            <TodoDeleteButton id={todo?.id} />
           </div>
         </div>
       ))}

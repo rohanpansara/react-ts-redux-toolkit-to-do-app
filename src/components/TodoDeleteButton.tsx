@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../redux/store";
 import { removeTask } from "../redux/slices/todoSlice";
+import { AppDispatch } from "../redux/store";
 
 interface DeleteTaskButtonProps {
   id: string;

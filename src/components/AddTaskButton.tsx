@@ -22,7 +22,7 @@ const AddTaskButton: React.FC<AddTaskButtonProps> = ({ task, setTask }) => {
   return (
     <button
       className="bg-blue-700 py-2 px-3 rounded-md text-gray-300 hover:cursor-pointer"
-      onClick={addTaskHandler} // ✅ Pass function reference (no need for arrow function)
+      onClick={addTaskHandler}
     >
       Add
     </button>
