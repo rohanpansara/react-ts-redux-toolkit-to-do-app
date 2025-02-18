@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import AddTaskButton from "./AddTaskButton";
 
 const AddTaskForm = () => {
   const [task, setTask] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   }, []);
 
   return (
@@ -18,9 +16,15 @@ const AddTaskForm = () => {
           ref={inputRef}
           type="text"
           placeholder="Add a task"
-          className="p-2 text-gray-300 placeholder:text-gray-400 focus:outline-none"
+          className="p-2 text-gray-500 font-semibold placeholder:text-gray-400 focus:outline-none"
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault(); // Prevent form submission behavior
+              inputRef.current?.nextElementSibling?.dispatchEvent(new MouseEvent("click", { bubbles: true })); // Simulate button click
+            }
+          }}
         />
         <AddTaskButton task={task} setTask={setTask} />
       </div>
